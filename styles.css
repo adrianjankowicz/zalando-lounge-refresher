@@ -8,7 +8,7 @@
         width: 300px;
         height: 120px;
         padding: 10px;
-        font-size: 18px;
+        font-size: 12px;
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         background: rgb(238,229,35);
 background: -moz-linear-gradient(90deg, rgba(238,229,35,1) 13%, rgba(230,96,23,1) 52%, rgba(196,12,227,0.7651435574229692) 72%);
@@ -60,4 +60,9 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#eee523",endCo
       }
       input:focus{
         outline-color: blueviolet;
+      }
+
+      .update-container{
+        font-size: 15px;
+        color: orangered;
       }
