@@ -61,8 +61,3 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#eee523",endCo
       input:focus{
         outline-color: blueviolet;
       }
-
-      .update-container{
-        font-size: 15px;
-        color: orangered;
-      }
