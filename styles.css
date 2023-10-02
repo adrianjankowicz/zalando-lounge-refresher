@@ -72,10 +72,8 @@ input {
   margin: 5px;
   padding-left: 10px;
 }
-.toggle-monitoring:hover {
+#toggle-monitoring:hover {
   cursor: pointer;
-  box-shadow: inset 200px 0 0 0 #54b3d6;
-  color: white;
 }
 input:focus {
   outline-color: blueviolet;
