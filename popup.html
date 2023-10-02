@@ -3,18 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <title>Auto Refresh and Add to Cart</title>
-    <link
+    <!-- <link
       rel="stylesheet"
       type="text/css"
       href="https://adrianjankowicz.github.io/zalando-lounge-refresher/styles.css"
-    />
-    <!-- <link rel="stylesheet" type="text/css" href="styles.css" /> -->
+    /> -->
+    <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
     <div class="main">
       <p class="title">Zalando Lounge Refresher</p>
-      <div id="update-container"></div>
-       <p class="">Rozmiar:</p>
+      <div id="update-container" style="display: none">
+        <p id="update-message">Aktualizacja jest dostępna
+        <a id="update-link" href="#" target="_blank">Kliknij tutaj, aby pobrać</a></p>
+      </div>
+
+      <p class="">Rozmiar:</p>
 
       <div class="inputs">
         <!-- <label for="size">Wpisz szukany rozmiar:</label> -->
@@ -27,7 +31,7 @@
       </div>
       <button id="toggle-monitoring">Start Monitoring</button>
     </div>
-    <img src="images/icon_setting.svg" id="showSettings"/>
+    <img src="images/icon_setting.svg" id="showSettings" />
     <div id="settingsModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
@@ -41,7 +45,8 @@
           value="https://i.nuuls.com/cN7Pk.mp3"
         />
         <div class="saveBtn">
-        <button id="saveSettings">Save Settings</button></div>
+          <button id="saveSettings">Save Settings</button>
+        </div>
       </div>
     </div>
     <script src="popup.js"></script>

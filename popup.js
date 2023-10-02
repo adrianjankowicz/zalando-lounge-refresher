@@ -9,12 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleButton.textContent = isEnabled
         ? 'Stop Monitoring'
         : 'Start Monitoring';
-      
+
       if (isEnabled) {
         toggleButton.style.boxShadow = 'inset 200px 0 0 0 #54b3d6';
         toggleButton.style.color = 'white';
-      }
-      else {
+      } else {
         toggleButton.style.boxShadow = 'inset 0 0 0 0 #54b3d6';
         toggleButton.style.color = '#54b3d6';
       }
@@ -38,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .addEventListener('click', () => {
         const currentUrl = tab.url;
 
-        // Check if the current URL matches the allowed pattern
         if (!currentUrl.includes('zalando-lounge.pl')) {
           alert('Rozszerzenie działa tylko na zalando-lounge.pl');
           return;
@@ -49,9 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const newSize = document.getElementById('size-input').value.trim();
 
           if (!newSize || !/^[a-zA-Z0-9]+$/.test(newSize)) {
-            alert(
-              'Wprowadź prawidłowy rozmiar.'
-            );
+            alert('Wprowadź prawidłowy rozmiar.');
             return;
           }
 
@@ -61,32 +57,38 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         });
       });
+
     chrome.storage.local.get(['refreshRate', 'soundUrl'], result => {
-      const refreshRate = result.refreshRate || 2; 
+      const refreshRate = result.refreshRate || 2;
       const soundUrl = result.soundUrl || 'https://i.nuuls.com/cN7Pk.mp3';
 
       document.getElementById('refreshRate').value = refreshRate;
       document.getElementById('soundUrl').value = soundUrl;
     });
   });
-});
+  // URL do pliku manifestu na GitHubie.
+  const manifestUrl =
+    'https://raw.githubusercontent.com/adrianjankowicz/zalando-lounge-refresher/main/manifest.json';
 
-chrome.storage.local.get(['updateAvailable', 'updateUrl'], function (result) {
-  if (result.updateAvailable) {
-    const updateContainer = document.getElementById('update-container');
-    const updateInfo = document.createElement('p');
-    const updateContact = document.createElement('p');
-    updateInfo.innerText = 'Dostępna jest nowa wesja.';
-    updateContact.innerHTML =
-      'Kontakt dc <span class="author-name">bukan_</span> w celu aktualizacji.';
-    updateContainer.appendChild(updateInfo);
-    updateContainer.appendChild(updateContact);
-    const authorName = document.querySelector('.author-name');
-    updateContainer.style.fontSize = '15px';
-    updateContainer.style.color = 'blue';
-    updateContainer.style.textAlign = 'center';
-    authorName.style.color = 'white';
-  }
+  // Pobierz lokalną wersję manifestu.
+  chrome.runtime.getManifest().version;
+
+  // Pobierz zdalny manifest i porównaj wersje.
+  fetch(manifestUrl)
+    .then(response => response.json())
+    .then(remoteManifest => {
+      const localVersion = chrome.runtime.getManifest().version;
+      const remoteVersion = remoteManifest.version;
+
+      if (localVersion !== remoteVersion) {
+        // Jeśli wersje są różne, wyświetl komunikat o aktualizacji.
+        document.getElementById('update-container').style.display = 'block';
+        document.getElementById(
+          'update-link'
+        ).href = `https://github.com/adrianjankowicz/zalando-lounge-refresher/releases/tag/${remoteVersion}`;
+      }
+    })
+    .catch(err => console.error('Error checking for updates:', err));
 });
 
 document.getElementById('saveSettings').addEventListener('click', () => {
@@ -105,27 +107,30 @@ const btn = document.getElementById('showSettings');
 const span = document.getElementsByClassName('close')[0];
 
 // When the user clicks the button, open the modal
-btn.onclick = function() {
+btn.onclick = function () {
   modal.style.display = 'block';
-}
+};
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+span.onclick = function () {
   modal.style.display = 'none';
-}
+};
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
+window.onclick = function (event) {
   if (event.target === modal) {
     modal.style.display = 'none';
   }
-}
+};
 
 // Save settings and close modal when save button is clicked
 document.getElementById('saveSettings').addEventListener('click', () => {
   const refreshRate = document.getElementById('refreshRate').value;
   const soundUrl = document.getElementById('soundUrl').value;
-  chrome.storage.local.set({ refreshRate: refreshRate, soundUrl: soundUrl }, () => {
-    modal.style.display = 'none';
-  });
+  chrome.storage.local.set(
+    { refreshRate: refreshRate, soundUrl: soundUrl },
+    () => {
+      modal.style.display = 'none';
+    }
+  );
 });

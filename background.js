@@ -1,9 +1,3 @@
-const CHECK_INTERVAL = 30 * 60 * 1000; // dla testów sprawdzaj co minutę
-const UPDATE_MANIFEST_URL =
-  'https://adrianjankowicz.github.io/zalando-lounge-refresher/update_manifest.json?nocache=${Date.now()}';
-
-
-
 function checkAndReload(size, tabKey) {
 
   const soundUrl = 'https://i.nuuls.com/cN7Pk.mp3';
@@ -45,7 +39,7 @@ chrome.alarms.onAlarm.addListener(alarm => {
       chrome.scripting.executeScript({
         target: { tabId: tabId },
         function: checkAndReload,
-        args: [result[tabKey]?.size, tabKey], // Passing tabKey as an argument
+        args: [result[tabKey]?.size, tabKey],
       });
     }
   });
@@ -84,23 +78,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
   }
 });
-
-function checkForUpdates() {
-  fetch(UPDATE_MANIFEST_URL)
-    .then(response => response.json())
-    .then(remoteManifest => {
-      const localVersion = chrome.runtime.getManifest().version;
-
-      if (remoteManifest.version > localVersion) {
-        chrome.storage.local.set({
-          updateAvailable: true,
-          updateUrl: remoteManifest.update_url,
-        });
-      } else {
-        chrome.storage.local.set({ updateAvailable: false });
-      }
-    })
-    .catch(error => console.error('Error checking for updates:', error));
-}
-
-setInterval(checkForUpdates, CHECK_INTERVAL);
