@@ -1,36 +1,52 @@
 function checkAndReload(size, tabKey) {
-
   const soundUrl = 'https://i.nuuls.com/cN7Pk.mp3';
+
   function playSound(url) {
     const audio = new Audio(url);
     audio.play().catch(error => console.error('Play sound error:', error));
   }
+
   let availableButtons = document.querySelectorAll(
-    '.styles__ArticleSizeButton-sc-1n1fwgw-0:not([disabled])'
+    '.ArticleSizeButton-sc-1n1fwgw-0:not([disabled])'
   );
+
   for (let button of availableButtons) {
     let sizeSpan = button.querySelector(
-      '.styles__ArticleSizeItemTitle-sc-1n1fwgw-3'
+      '.ArticleSizeItemTitle-sc-1n1fwgw-3'
     );
+
     if (sizeSpan && sizeSpan.textContent.trim() === size) {
       const tabId = parseInt(tabKey.replace('tab_', ''));
+      
+      // Ustawienie aria-checked na true
+      button.setAttribute('aria-checked', 'true');
+      
       chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
       button.click();
-      let addToCartButton = document.querySelector(
-        '.auto-tests-add-to-cart-button'
-      );
-      if (addToCartButton) {
-        addToCartButton.click();
-        chrome.runtime.sendMessage({ type: 'ITEM_ADDED_TO_CART' });
-        playSound(soundUrl);
-      }
+
+      // Kliknij przycisk "Dodaj do koszyka" po wybraniu rozmiaru
+      setTimeout(() => {
+        let addToCartButton = document.querySelector(
+          '.auto-tests-add-to-cart-button'
+        );
+        if (addToCartButton) {
+          addToCartButton.click();
+          chrome.runtime.sendMessage({ type: 'ITEM_ADDED_TO_CART' });
+          playSound(soundUrl);
+        } else {
+          console.error('Add to cart button not found');
+        }
+      }, 500); // Dodaj krótki timeout, aby upewnić się, że rozmiar został wybrany
+
       return;
     }
   }
+
+  // Przeładuj stronę, jeśli nie znaleziono odpowiedniego rozmiaru
   location.reload();
 }
 
-
+// Reszta kodu pozostaje bez zmian
 chrome.alarms.onAlarm.addListener(alarm => {
   const tabId = parseInt(alarm.name.replace('tab_', ''));
   const tabKey = alarm.name;

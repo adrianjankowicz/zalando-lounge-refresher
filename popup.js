@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('update-container').style.display = 'block';
         document.getElementById(
           'update-link'
-        ).href = `https://github.com/adrianjankowicz/zalando-lounge-refresher/releases`;
+        ).href = `https://github.com/adrianjankowicz/zalando-lounge-refresher/releases/tag/${remoteVersion}`;
       }
     })
     .catch(err => console.error('Error checking for updates:', err));
