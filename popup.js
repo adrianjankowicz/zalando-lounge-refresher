@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const isEnabled = result[tabKey]?.enabled || false;
           const newSize = document.getElementById('size-input').value.trim();
 
-          if (!newSize || !/^[a-zA-Z0-9]+$/.test(newSize)) {
+          if (!newSize || !/^[a-zA-Z0-9.]+$/.test(newSize)) {
             alert('Wprowadź prawidłowy rozmiar.');
             return;
           }
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('update-container').style.display = 'block';
         document.getElementById(
           'update-link'
-        ).href = `https://github.com/adrianjankowicz/zalando-lounge-refresher/releases/tag/${remoteVersion}`;
+        ).href = `https://github.com/adrianjankowicz/zalando-lounge-refresher/releases`;
       }
     })
     .catch(err => console.error('Error checking for updates:', err));
