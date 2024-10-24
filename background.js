@@ -89,8 +89,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.notifications.create('itemAdded', {
       type: 'basic',
       iconUrl: 'images/64.png',
-      title: 'Item Added to Cart',
-      message: 'Your desired item has been added to the cart.',
+      title: 'Przedmiot dodany do koszyka',
+      message: 'Twój wybrany przedmiot został dodany do koszyka. Masz 10 minut na dokonanie zakupu.',
     });
   }
 });
