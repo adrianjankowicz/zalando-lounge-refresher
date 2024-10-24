@@ -3,11 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <title>Auto Refresh and Add to Cart</title>
-    <!-- <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://adrianjankowicz.github.io/zalando-lounge-refresher/styles.css"
-    /> -->
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
@@ -39,10 +34,11 @@
         <input type="number" id="refreshRate" min="1" value="2" />
 
         <label for="soundUrl">URL do dźwięku powiadomienia:</label>
+        <label class="wrong-url">Jeśli URL będzię nieprawidłowy zostanie odtworzny standardowy dźwięk</label>
         <input
           type="text"
           id="soundUrl"
-          value="https://i.nuuls.com/cN7Pk.mp3"
+          placeholder="Wpisz URL"
         />
         <div class="saveBtn">
           <button id="saveSettings">Save Settings</button>

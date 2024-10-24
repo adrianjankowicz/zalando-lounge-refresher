@@ -66,14 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('soundUrl').value = soundUrl;
     });
   });
-  // URL do pliku manifestu na GitHubie.
+
   const manifestUrl =
     'https://raw.githubusercontent.com/adrianjankowicz/zalando-lounge-refresher/main/manifest.json';
 
-  // Pobierz lokalną wersję manifestu.
   chrome.runtime.getManifest().version;
 
-  // Pobierz zdalny manifest i porównaj wersje.
   fetch(manifestUrl)
     .then(response => response.json())
     .then(remoteManifest => {
@@ -81,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const remoteVersion = remoteManifest.version;
 
       if (localVersion !== remoteVersion) {
-        // Jeśli wersje są różne, wyświetl komunikat o aktualizacji.
         document.getElementById('update-container').style.display = 'block';
         document.getElementById(
           'update-link'
@@ -97,33 +94,26 @@ document.getElementById('saveSettings').addEventListener('click', () => {
   chrome.storage.local.set({ refreshRate: refreshRate, soundUrl: soundUrl });
 });
 
-// Get the modal
 const modal = document.getElementById('settingsModal');
 
-// Get the button that opens the modal
 const btn = document.getElementById('showSettings');
 
-// Get the <span> element that closes the modal
 const span = document.getElementsByClassName('close')[0];
 
-// When the user clicks the button, open the modal
 btn.onclick = function () {
   modal.style.display = 'block';
 };
 
-// When the user clicks on <span> (x), close the modal
 span.onclick = function () {
   modal.style.display = 'none';
 };
 
-// When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
   if (event.target === modal) {
     modal.style.display = 'none';
   }
 };
 
-// Save settings and close modal when save button is clicked
 document.getElementById('saveSettings').addEventListener('click', () => {
   const refreshRate = document.getElementById('refreshRate').value;
   const soundUrl = document.getElementById('soundUrl').value;

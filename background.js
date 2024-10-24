@@ -1,9 +1,16 @@
 function checkAndReload(size, tabKey) {
-  const soundUrl = 'https://i.nuuls.com/cN7Pk.mp3';
+  const defaultSoundUrl = 'https://i.nuuls.com/cN7Pk.mp3';
 
   function playSound(url) {
     const audio = new Audio(url);
-    audio.play().catch(error => console.error('Play sound error:', error));
+    audio.play()
+      .catch(error => {
+        console.error('Play sound error:', error);
+        if (url !== defaultSoundUrl) {
+          console.log('Playing default sound due to error');
+          playSound(defaultSoundUrl);
+        }
+      });
   }
 
   let availableButtons = document.querySelectorAll(
@@ -15,16 +22,14 @@ function checkAndReload(size, tabKey) {
       '.ArticleSizeItemTitle-sc-1n1fwgw-3'
     );
 
-    if (sizeSpan && sizeSpan.textContent.trim() === size) {
-      const tabId = parseInt(tabKey.replace('tab_', ''));
+    if (sizeSpan && sizeSpan.textContent.trim().toLowerCase() === size.toLowerCase()) {
+      parseInt(tabKey.replace('tab_', ''));
       
-      // Ustawienie aria-checked na true
       button.setAttribute('aria-checked', 'true');
       
       chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
       button.click();
 
-      // Kliknij przycisk "Dodaj do koszyka" po wybraniu rozmiaru
       setTimeout(() => {
         let addToCartButton = document.querySelector(
           '.auto-tests-add-to-cart-button'
@@ -32,11 +37,14 @@ function checkAndReload(size, tabKey) {
         if (addToCartButton) {
           addToCartButton.click();
           chrome.runtime.sendMessage({ type: 'ITEM_ADDED_TO_CART' });
-          playSound(soundUrl);
+          chrome.storage.local.get(['soundUrl'], result => {
+            const soundUrl = result.soundUrl || defaultSoundUrl;
+            playSound(soundUrl);
+          });
         } else {
           console.error('Add to cart button not found');
         }
-      }, 500); // Dodaj krótki timeout, aby upewnić się, że rozmiar został wybrany
+      }, 500);
 
       return;
     }
