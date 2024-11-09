@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Auto Refresh and Add to Cart",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Automatycznie odświeża strone co 2s oraz dodaje produkt do koszyka, jeśli wybrany wcześniej rozmiar jest dostępny",
   "permissions": [
     "notifications",
