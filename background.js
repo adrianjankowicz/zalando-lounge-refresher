@@ -23,7 +23,6 @@ function checkAndReload(size, tabKey) {
   for (let button of disabledButtons) {
     let soldOutSpan = button.querySelector(".StyledText-sc-1ubo0hy span");
     let sizeSpan = button.querySelector(".ArticleSizeItemTitle-sc-1n1fwgw-3");
-    console.log(size)
     if (soldOutSpan && sizeSpan.textContent.trim().toLowerCase() === size.toLowerCase() && soldOutSpan.textContent.trim() === "Wyprzedane") {
       chrome.runtime.sendMessage({ type: "SIZE_SOLD_OUT" });
       chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
@@ -52,7 +51,7 @@ function checkAndReload(size, tabKey) {
         );
         if (addToCartButton) {
           addToCartButton.click();
-          chrome.runtime.sendMessage({ type: "ITEM_ADDED_TO_CART" });
+          chrome.runtime.sendMessage({ type: "ITEM_ADDED_TO_CART", size: size });
           chrome.storage.local.get(["soundUrl"], (result) => {
             const soundUrl = result.soundUrl || defaultSoundUrl;
             playSound(soundUrl);
@@ -117,12 +116,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
   }
 
-  if (message.type === "SIZE_SOLD_OUT") {
-    chrome.notifications.create("itemSoldOut", {
-      type: "SIZE_SOLD_OUT",
-      iconUrl: "images/64.png",
-      title: "Rozmiar wyprzedany",
-      message: `Rozmiar ${size} jest wyprzedany i odświeżanie zostało zakończone.`,
-    });
-  }
+  // if (message.type === "SIZE_SOLD_OUT") {
+  //   console.log(message)
+  //   chrome.notifications.create("itemSoldOut", {
+  //     type: "basic",
+  //     iconUrl: "images/64.png",
+  //     title: "Rozmiar wyprzedany",
+  //     message: `Rozmiar ${message.size} jest wyprzedany i odświeżanie zostało zakończone.`,
+  //   });
+  // }
 });
