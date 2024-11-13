@@ -20,6 +20,27 @@ function checkAndReload(size, tabKey) {
     ".ArticleSizeButton-sc-1n1fwgw-0:disabled"
   );
 
+   const sizeSectionButtons = document.querySelectorAll(
+    ".ArticleSizeButton-sc-1n1fwgw-0"
+  );
+
+   if (sizeSectionButtons && sizeSectionButtons.length === 0) {
+    const addToCartButton = document.querySelector(".auto-tests-add-to-cart-button");
+    if (addToCartButton && !addToCartButton.disabled) {
+      addToCartButton.click();
+      chrome.runtime.sendMessage({ type: "ITEM_ADDED_TO_CART", size: size });
+      chrome.storage.local.get(["soundUrl"], (result) => {
+        const soundUrl = result.soundUrl || defaultSoundUrl;
+        playSound(soundUrl);
+        return; 
+      });
+    } else {
+      console.error("Add to cart button not found or is disabled. Refreshing");
+      location.reload();
+    }
+    return; 
+  }
+
   for (let button of disabledButtons) {
     let soldOutSpan = button.querySelector(".StyledText-sc-1ubo0hy span");
     let sizeSpan = button.querySelector(".ArticleSizeItemTitle-sc-1n1fwgw-3");
