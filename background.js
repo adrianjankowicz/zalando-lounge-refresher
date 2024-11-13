@@ -27,12 +27,12 @@ function checkAndReload(size, tabKey) {
    if (sizeSectionButtons && sizeSectionButtons.length === 0) {
     const addToCartButton = document.querySelector(".auto-tests-add-to-cart-button");
     if (addToCartButton && !addToCartButton.disabled) {
+      chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
       addToCartButton.click();
       chrome.runtime.sendMessage({ type: "ITEM_ADDED_TO_CART", size: size });
       chrome.storage.local.get(["soundUrl"], (result) => {
         const soundUrl = result.soundUrl || defaultSoundUrl;
         playSound(soundUrl);
-        return; 
       });
     } else {
       console.error("Add to cart button not found or is disabled. Refreshing");
