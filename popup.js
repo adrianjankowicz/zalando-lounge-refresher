@@ -58,12 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
-    chrome.storage.local.get(['refreshRate', 'soundUrl'], result => {
+    chrome.storage.local.get(['refreshRate', 'soundUrl', 'soldOutRefresh'], result => {
       const refreshRate = result.refreshRate || 2;
       const soundUrl = result.soundUrl || 'https://i.nuuls.com/cN7Pk.mp3';
+      const soldOutRefresh = result.soldOutRefresh ?? false;
 
       document.getElementById('refreshRate').value = refreshRate;
       document.getElementById('soundUrl').value = soundUrl;
+      document.getElementById('soldOutRefresh1').checked = soldOutRefresh;
     });
   });
 
@@ -88,11 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(err => console.error('Error checking for updates:', err));
 });
 
-document.getElementById('saveSettings').addEventListener('click', () => {
-  const refreshRate = document.getElementById('refreshRate').value;
-  const soundUrl = document.getElementById('soundUrl').value;
-  chrome.storage.local.set({ refreshRate: refreshRate, soundUrl: soundUrl });
-});
+// document.getElementById('saveSettings').addEventListener('click', () => {
+//   const refreshRate = document.getElementById('refreshRate').value;
+//   const soundUrl = document.getElementById('soundUrl').value;
+//   chrome.storage.local.set({ refreshRate: refreshRate, soundUrl: soundUrl });
+// });
 
 const modal = document.getElementById('settingsModal');
 
@@ -117,10 +119,13 @@ window.onclick = function (event) {
 document.getElementById('saveSettings').addEventListener('click', () => {
   const refreshRate = document.getElementById('refreshRate').value;
   const soundUrl = document.getElementById('soundUrl').value;
+  const soldOutRefresh = document.getElementById('soldOutRefresh1').checked;
+
   chrome.storage.local.set(
-    { refreshRate: refreshRate, soundUrl: soundUrl },
+    { refreshRate: refreshRate, soundUrl: soundUrl, soldOutRefresh: soldOutRefresh },
     () => {
       modal.style.display = 'none';
     }
   );
 });
+

@@ -159,3 +159,12 @@ input:focus {
 .wrong-url{
   font-size: 8px;
 }
+
+.soldOutRefreshBox{
+  display: flex;
+  align-items: center;
+}
+
+#soldOutRefresh{
+  transform: scale(0.7);
+}

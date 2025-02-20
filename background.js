@@ -24,14 +24,16 @@ function checkAndReload(size, tabKey) {
     ".ArticleSizeButton-sc-1n1fwgw-0"
   );
 
+
    if (sizeSectionButtons && sizeSectionButtons.length === 0) {
     const addToCartButton = document.querySelector(".auto-tests-add-to-cart-button");
     if (addToCartButton && !addToCartButton.disabled) {
       chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
       addToCartButton.click();
       chrome.runtime.sendMessage({ type: "ITEM_ADDED_TO_CART", size: size });
-      chrome.storage.local.get(["soundUrl"], (result) => {
+      chrome.storage.local.get(["soundUrl", "soldOutRefresh"], (result) => {
         const soundUrl = result.soundUrl || defaultSoundUrl;
+        soldOutRefresh = result.soldOutRefresh;
         playSound(soundUrl);
       });
     } else {
@@ -44,12 +46,18 @@ function checkAndReload(size, tabKey) {
   for (let button of disabledButtons) {
     let soldOutSpan = button.querySelector(".StyledText-sc-1ubo0hy span");
     let sizeSpan = button.querySelector(".ArticleSizeItemTitle-sc-1n1fwgw-3");
-    if (soldOutSpan && sizeSpan.textContent.trim().toLowerCase() === size.toLowerCase() && soldOutSpan.textContent.trim() === "Wyprzedane") {
-      chrome.runtime.sendMessage({ type: "SIZE_SOLD_OUT" });
-      chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
-      alert(`Produkt w rozmiarze ${size.toString().toUpperCase()} został wyprzedany\nOdświeżanie zostało zatrzymane`);
-      return;
+    chrome.storage.local.get(["soldOutRefresh"], (result) => {
+      soldOutRefresh = result.soldOutRefresh;
+      console.log('sold', soldOutRefresh)
+      if (!soldOutRefresh) {
+      if (soldOutSpan && sizeSpan.textContent.trim().toLowerCase() === size.toLowerCase() && soldOutSpan.textContent.trim() === "Wyprzedane") {
+        chrome.runtime.sendMessage({ type: "SIZE_SOLD_OUT" });
+        chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
+        alert(`Produkt w rozmiarze ${size.toString().toUpperCase()} został wyprzedany\nOdświeżanie zostało zatrzymane`);
+        return;
+      }
     }
+    });
   }
 
   for (let button of availableButtons) {
