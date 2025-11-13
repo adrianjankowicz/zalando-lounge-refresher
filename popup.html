@@ -19,11 +19,18 @@
       </div>
 
       <!-- Update Banner -->
-      <div id="update-container" class="update-banner" style="display: none">
+      <div id="update-container" class="update-banner">
         <span class="update-icon">📦</span>
-        <div>
+        <div class="update-content">
           <p class="update-title">Nowa wersja dostępna</p>
-          <a id="update-link" href="#" target="_blank" class="update-link">Pobierz tutaj</a>
+          <a
+            id="update-link"
+            href="#"
+            target="_blank"
+            class="update-link"
+            title="Przejdź do pobrania"
+            >Pobierz tutaj</a
+          >
         </div>
       </div>
 
@@ -66,12 +73,12 @@
               ⏱️ Częstotliwość odświeżania (sekundy)
             </label>
             <div class="input-wrapper">
-              <input 
-                type="number" 
-                id="refreshRate" 
-                min="1" 
+              <input
+                type="number"
+                id="refreshRate"
+                min="1"
                 max="60"
-                value="2" 
+                value="2"
                 class="setting-input"
               />
               <span class="input-unit">s</span>
@@ -89,18 +96,22 @@
               placeholder="https://..."
               class="setting-input"
             />
-            <p class="setting-hint">⚠️ Nieprawidłowy URL = standardowy dźwięk</p>
+            <p class="setting-hint">
+              ⚠️ Nieprawidłowy URL = standardowy dźwięk
+            </p>
           </div>
 
           <!-- Sold Out Refresh -->
           <div class="setting-group">
             <label class="checkbox-label">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 id="soldOutRefresh1"
                 class="checkbox-input"
               />
-              <span class="checkbox-text">Odśwież mimo wyprzedanego towaru</span>
+              <span class="checkbox-text"
+                >Odśwież mimo wyprzedanego towaru</span
+              >
             </label>
           </div>
         </div>

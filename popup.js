@@ -84,25 +84,42 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  const manifestUrl =
-    "https://raw.githubusercontent.com/adrianjankowicz/zalando-lounge-refresher/main/manifest.json";
+const manifestUrl = "https://raw.githubusercontent.com/adrianjankowicz/zalando-lounge-refresher/main/manifest.json";
 
-  chrome.runtime.getManifest().version;
+fetch(manifestUrl)
+  .then((response) => {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  })
+  .then((remoteManifest) => {
+    const localVersion = chrome.runtime.getManifest().version;
+    const remoteVersion = remoteManifest.version;
 
-  fetch(manifestUrl)
-    .then((response) => response.json())
-    .then((remoteManifest) => {
-      const localVersion = chrome.runtime.getManifest().version;
-      const remoteVersion = remoteManifest.version;
+    const updateContainer = document.getElementById("update-container");
+    const updateLink = document.getElementById("update-link");
+    const updateTitleEl = document.querySelector(".update-title");
 
-      if (localVersion !== remoteVersion) {
-        document.getElementById("update-container").style.display = "block";
-        document.getElementById(
-          "update-link"
-        ).href = `https://github.com/adrianjankowicz/zalando-lounge-refresher`;
+    if (localVersion !== remoteVersion) {
+      if (updateContainer) updateContainer.style.display = "flex";
+      if (updateLink) {
+        updateLink.href = "https://github.com/adrianjankowicz/zalando-lounge-refresher";
+        updateLink.title = `Przejdź do pobrania wersji ${remoteVersion}`;
       }
-    })
-    .catch((err) => console.error("Error checking for updates:", err));
+      if (updateTitleEl) {
+        updateTitleEl.innerText = `Dostępna aktualizacja: ${remoteVersion} (Twoja wersja: ${localVersion})`;
+      }
+    } else {
+      // Wersje zgodne – ukryj baner i wyczyść ewentualne stare dane.
+      if (updateContainer) updateContainer.style.display = "none";
+      if (updateLink) {
+        updateLink.removeAttribute("title");
+      }
+      if (updateTitleEl) {
+        updateTitleEl.innerText = "Nowa wersja dostępna";
+      }
+    }
+  })
+  .catch((err) => console.error("Error checking for updates:", err));
 });
 
 // document.getElementById('saveSettings').addEventListener('click', () => {
