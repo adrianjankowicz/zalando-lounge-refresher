@@ -1,54 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
-    <title>Auto Refresh and Add to Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zalando Lounge Refresher</title>
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
-    <div class="main">
-      <p class="title">Zalando Lounge Refresher</p>
-      <div id="update-container" style="display: none">
-        <p id="update-message">Aktualizacja jest dostępna
-        <a id="update-link" href="#" target="_blank">Kliknij tutaj, aby pobrać</a></p>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-content">
+          <h1 class="title">🎯 Zalando Lounge</h1>
+          <p class="subtitle">Auto Refresher</p>
+        </div>
+        <button id="showSettings" class="settings-btn" title="Ustawienia">
+          ⚙️
+        </button>
       </div>
 
-      <p class="size-text">Rozmiar:</p>
-
-      <div class="inputs">
-        <!-- <label for="size">Wpisz szukany rozmiar:</label> -->
-        <input
-          type="text"
-          id="size-input"
-          name="size"
-          placeholder="Wpisz szukany rozmiar"
-        />
+      <!-- Update Banner -->
+      <div id="update-container" class="update-banner" style="display: none">
+        <span class="update-icon">📦</span>
+        <div>
+          <p class="update-title">Nowa wersja dostępna</p>
+          <a id="update-link" href="#" target="_blank" class="update-link">Pobierz tutaj</a>
+        </div>
       </div>
-      <button id="toggle-monitoring">Start Monitoring</button>
-    </div>
-    <img src="images/icon_setting.svg" id="showSettings" />
-    <div id="settingsModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <label for="refreshRate">Częstotliwość odświeżania (sekundy):</label>
-        <input type="number" id="refreshRate" min="1" value="2" />
 
-        <label for="soundUrl">URL do dźwięku powiadomienia:</label>
-        <label class="wrong-url">Jeśli URL będzię nieprawidłowy zostanie odtworzny standardowy dźwięk</label>
-        <input
-          type="text"
-          id="soundUrl"
-          placeholder="Wpisz URL"
-        />
-        <div class="soldOutRefreshBox">
-          <input type="checkbox" id="soldOutRefresh1" />
-          <label for="soldOutRefresh1">Odśwież pomimo wyprzedanego towaru</label>
-      </div>
-        <div class="saveBtn">
-          <button id="saveSettings">Save Settings</button>
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="input-group">
+          <label for="size-input" class="label-text">Szukany rozmiar</label>
+          <input
+            type="text"
+            id="size-input"
+            placeholder="np. M, L, XL"
+            class="size-input"
+          />
+        </div>
+
+        <button id="toggle-monitoring" class="btn btn-primary">
+          <span class="btn-icon">▶️</span>
+          <span class="btn-text">Start Monitoring</span>
+        </button>
+
+        <div class="status-info">
+          <p class="status-text" id="status-text">Gotowy do użytku</p>
         </div>
       </div>
     </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Ustawienia</h2>
+          <button class="close-btn">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Refresh Rate -->
+          <div class="setting-group">
+            <label for="refreshRate" class="setting-label">
+              ⏱️ Częstotliwość odświeżania (sekundy)
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="number" 
+                id="refreshRate" 
+                min="1" 
+                max="60"
+                value="2" 
+                class="setting-input"
+              />
+              <span class="input-unit">s</span>
+            </div>
+          </div>
+
+          <!-- Sound URL -->
+          <div class="setting-group">
+            <label for="soundUrl" class="setting-label">
+              🔔 URL dźwięku powiadomienia
+            </label>
+            <input
+              type="text"
+              id="soundUrl"
+              placeholder="https://..."
+              class="setting-input"
+            />
+            <p class="setting-hint">⚠️ Nieprawidłowy URL = standardowy dźwięk</p>
+          </div>
+
+          <!-- Sold Out Refresh -->
+          <div class="setting-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                id="soldOutRefresh1"
+                class="checkbox-input"
+              />
+              <span class="checkbox-text">Odśwież mimo wyprzedanego towaru</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="saveSettings" class="btn btn-primary btn-block">
+            💾 Zapisz ustawienia
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script src="popup.js"></script>
   </body>
 </html>

@@ -13,19 +13,18 @@ function checkAndReload(size, tabKey) {
   }
 
   let availableButtons = document.querySelectorAll(
-    ".ArticleSizeButton-sc-1n1fwgw-0:not([disabled])"
+    ".ArticleSizeToggle-sc-1n1fwgw-0:not([disabled])"
   );
 
   let disabledButtons = document.querySelectorAll(
-    ".ArticleSizeButton-sc-1n1fwgw-0:disabled"
+    ".ArticleSizeToggle-sc-1n1fwgw-0[disabled]"
   );
 
-   const sizeSectionButtons = document.querySelectorAll(
-    ".ArticleSizeButton-sc-1n1fwgw-0"
+  const sizeSectionButtons = document.querySelectorAll(
+    ".ArticleSizeToggle-sc-1n1fwgw-0"
   );
 
-
-   if (sizeSectionButtons && sizeSectionButtons.length === 0) {
+  if (sizeSectionButtons && sizeSectionButtons.length === 0) {
     const addToCartButton = document.querySelector(".auto-tests-add-to-cart-button");
     if (addToCartButton && !addToCartButton.disabled) {
       chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
@@ -44,24 +43,26 @@ function checkAndReload(size, tabKey) {
   }
 
   for (let button of disabledButtons) {
-    let soldOutSpan = button.querySelector(".StyledText-sc-1ubo0hy span");
-    let sizeSpan = button.querySelector(".ArticleSizeItemTitle-sc-1n1fwgw-3");
+    let statusSpan = button.querySelector(".StyledText-sc-1ubo0hy.fdsvXs span, .StyledText-sc-1ubo0hy.hlyEpQ span");
+    let sizeSpan = button.querySelector(".ArticleSizeItemTitle-sc-1n1fwgw-2");
+    
     chrome.storage.local.get(["soldOutRefresh"], (result) => {
       soldOutRefresh = result.soldOutRefresh;
       console.log('sold', soldOutRefresh)
+      
       if (!soldOutRefresh) {
-      if (soldOutSpan && sizeSpan.textContent.trim().toLowerCase() === size.toLowerCase() && soldOutSpan.textContent.trim() === "Wyprzedane") {
-        chrome.runtime.sendMessage({ type: "SIZE_SOLD_OUT" });
-        chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
-        alert(`Produkt w rozmiarze ${size.toString().toUpperCase()} został wyprzedany\nOdświeżanie zostało zatrzymane`);
-        return;
+        if (statusSpan && sizeSpan && sizeSpan.textContent.trim().toLowerCase() === size.toLowerCase() && statusSpan.textContent.trim() === "Wyprzedane") {
+          chrome.runtime.sendMessage({ type: "SIZE_SOLD_OUT" });
+          chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
+          alert(`Produkt w rozmiarze ${size.toString().toUpperCase()} został wyprzedany\nOdświeżanie zostało zatrzymane`);
+          return;
+        }
       }
-    }
     });
   }
 
   for (let button of availableButtons) {
-    let sizeSpan = button.querySelector(".ArticleSizeItemTitle-sc-1n1fwgw-3");
+    let sizeSpan = button.querySelector(".ArticleSizeItemTitle-sc-1n1fwgw-2");
 
     if (
       sizeSpan &&
@@ -69,10 +70,19 @@ function checkAndReload(size, tabKey) {
     ) {
       parseInt(tabKey.replace("tab_", ""));
 
-      button.setAttribute("aria-checked", "true");
+      const radioInput = button.querySelector("input[type='radio']");
+      if (radioInput) {
+        radioInput.setAttribute("aria-checked", "true");
+        radioInput.checked = true;
+      }
 
       chrome.storage.local.set({ [tabKey]: { enabled: false, size: size } });
-      button.click();
+      
+      const radioInput2 = button.querySelector("input[type='radio']");
+      if (radioInput2) {
+        radioInput2.click();
+        radioInput2.dispatchEvent(new Event("change", { bubbles: true }));
+      }
 
       setTimeout(() => {
         let addToCartButton = document.querySelector(
@@ -144,6 +154,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         "Twój wybrany przedmiot został dodany do koszyka. Masz 20 minut na dokonanie zakupu.",
     });
   }
+
 
   // if (message.type === "SIZE_SOLD_OUT") {
   //   console.log(message)
